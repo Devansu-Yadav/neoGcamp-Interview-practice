@@ -8,11 +8,16 @@ function submitEventHandler() {
 }
 
 function processingOnInputAndDisplay(fullName) {
-    var queryToAPI = "https://api.funtranslations.com/translate/minion.json?text=" + fullName;
+    var queryToAPI = "https://api.funtranslations.com/translate/minion.json" + fullName;
     fetch(queryToAPI)
-    .then(response => response.json())
+    .then(function(response) {
+        if(response.status === 400) {
+            outputDiv.innerText = "Bad Request: text is missing.";
+        }
+        return response.json();
+    })
     .then(data => outputDiv.innerText = capitalizeString(data.contents.translated))
-    .catch(err => console.log(err));
+    .catch(error => console.log(error));
 }
 
 function capitalizeString(strInput) {
